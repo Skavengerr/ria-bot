@@ -10,7 +10,7 @@
 - Get cars by Model
 - Get all marks
 
+#### **API files located at api/server package*
+
 ---
 ![record](https://user-images.githubusercontent.com/41162650/182768200-dcde4687-0c2b-4477-b97b-d66823db7309.gif)
-
-#### **API files located at api folder*

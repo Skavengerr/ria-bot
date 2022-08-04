@@ -5,6 +5,7 @@ import (
 	"ria-bot/configs"
 )
 
+// Мне не понятно, делается ли так в продакшине, нужно ведь где то хранить сами запросы
 func GetAllCarsAPI() string {
 	url := fmt.Sprintf("%s/search?api_key=%s", configs.RIA_DEV_BASE_URL, configs.RIA_API_KEY)
 
