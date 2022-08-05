@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"ria-bot/configs"
+	configs "ria-bot/configs"
 )
 
 func GetDataFromApi(url string) []byte {
