@@ -3,7 +3,7 @@ package telegram
 import (
 	"log"
 
-	"ria-bot/api/server"
+	car "ria-bot/internal/car"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -47,7 +47,7 @@ func (b *Bot) handleStartCommand(message *tgbotapi.Message) error {
 }
 
 func (b *Bot) handleMessage(message *tgbotapi.Message) error {
-	cars := server.GetCarsByMark(message.Text)
+	cars := car.GetCarsByMark(message.Text, b.cfg)
 
 	for _, car := range cars {
 		msg := tgbotapi.NewMessage(message.Chat.ID, car)
@@ -62,7 +62,7 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) error {
 }
 
 func (b *Bot) handleGetAllCars(message *tgbotapi.Message) error {
-	cars := server.GetAllCars()
+	cars := car.GetAllCars(b.cfg)
 
 	for _, car := range cars {
 		msg := tgbotapi.NewMessage(message.Chat.ID, car)

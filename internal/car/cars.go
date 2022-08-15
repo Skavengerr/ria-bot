@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"sync"
+
+	configs "ria-bot/configs"
 )
 
 type Result struct {
@@ -37,17 +39,17 @@ type Mark struct {
 	Value int64
 }
 
-func GetAllCars() []string {
-	url := GetAllCarsAPI()
+func GetAllCars(cfg *configs.Config) []string {
+	url := GetAllCarsAPI(cfg)
 	responseData := GetDataFromApi(url)
 
-	cars := GetCarsResult(responseData)
+	cars := GetCarsResult(responseData, cfg)
 
 	return cars
 }
 
-func GetCarById(id string, cars chan Car, wg *sync.WaitGroup) {
-	url := GetCarByIdAPI(id)
+func GetCarById(id string, cars chan Car, wg *sync.WaitGroup, cfg *configs.Config) {
+	url := GetCarByIdAPI(id, cfg)
 	responseData := GetDataFromApi(url)
 
 	var v Car
@@ -57,7 +59,7 @@ func GetCarById(id string, cars chan Car, wg *sync.WaitGroup) {
 	cars <- v
 }
 
-func GetCarsResult(responseData []byte) []string {
+func GetCarsResult(responseData []byte, cfg *configs.Config) []string {
 	var wg sync.WaitGroup
 
 	var r Result
@@ -68,9 +70,9 @@ func GetCarsResult(responseData []byte) []string {
 	var carsSlice []Car
 	carsChan := make(chan Car)
 
-	for _, id := range r.Result.SearchResult.Ids {
+	for _, id := range r.SearchResult.CarIds.Ids {
 		wg.Add(1)
-		go GetCarById(id, carsChan, &wg)
+		go GetCarById(id, carsChan, &wg, cfg)
 		wg.Done()
 
 		msg1 := <-carsChan
@@ -79,13 +81,13 @@ func GetCarsResult(responseData []byte) []string {
 
 	wg.Wait()
 
-	cars := ParseCarsResult(carsSlice)
+	cars := ParseCarsResult(carsSlice, cfg)
 
 	return cars
 }
 
-func getAllMarks() []Mark {
-	url := GetAllMarksAPI()
+func getAllMarks(cfg *configs.Config) []Mark {
+	url := GetAllMarksAPI(cfg)
 	responseData := GetDataFromApi(url)
 
 	var m []Mark
@@ -96,8 +98,8 @@ func getAllMarks() []Mark {
 	return m
 }
 
-func GetCarsByMark(mark string) []string {
-	marks := getAllMarks()
+func GetCarsByMark(mark string, cfg *configs.Config) []string {
+	marks := getAllMarks(cfg)
 
 	var searchableMark int64
 
@@ -107,10 +109,10 @@ func GetCarsByMark(mark string) []string {
 		}
 	}
 
-	url := GetCarsByMarkAPI(searchableMark)
+	url := GetCarsByMarkAPI(searchableMark, cfg)
 	responseData := GetDataFromApi(url)
 
-	cars := GetCarsResult(responseData)
+	cars := GetCarsResult(responseData, cfg)
 
 	return cars
 }

@@ -4,21 +4,21 @@ import (
 	"fmt"
 	"log"
 
-	"ria-bot/configs"
+	configs "ria-bot/configs"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 type Bot struct {
 	bot *tgbotapi.BotAPI
-
-	//messages config.Messages
+	cfg *configs.Config
 }
 
-func InitBot() *tgbotapi.BotAPI {
-	bot, err := tgbotapi.NewBotAPI(configs.TELEGRAM_API_KEY)
+func InitBot(configs *configs.Config) *tgbotapi.BotAPI {
+	fmt.Println("asdads", configs)
+	bot, err := tgbotapi.NewBotAPI(configs.TelegramApiKey)
 	if err != nil {
-		log.Panic(err)
+		log.Panic("dasdas", err)
 	}
 
 	bot.Debug = true
@@ -29,9 +29,10 @@ func InitBot() *tgbotapi.BotAPI {
 	return bot
 }
 
-func NewBot(bot *tgbotapi.BotAPI) *Bot {
+func NewBot(bot *tgbotapi.BotAPI, cfg *configs.Config) *Bot {
 	return &Bot{
 		bot: bot,
+		cfg: cfg,
 	}
 }
 

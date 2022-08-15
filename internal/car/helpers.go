@@ -29,13 +29,13 @@ func GetDataFromApi(url string) []byte {
 	return responseData
 }
 
-func ParseCarsResult(carsSlice []Car) []string {
+func ParseCarsResult(carsSlice []Car, cfg *configs.Config) []string {
 	var carResult []string
 
 	for _, car := range carsSlice {
 		carInfo := fmt.Sprintf(
 			"Title: %s\nMark: %s\nModel: %s\nYear: %d\nPrice: %d$\nLink: %s\nDescription: %s\n",
-			car.Title, car.Mark, car.Model, car.Car.Year, car.Price, configs.RIA_BASE_URL+car.Link, truncateText(car.Car.Description, 200),
+			car.Title, car.Mark, car.Model, car.CarData.Year, car.Price, cfg.RiaBaseUrl+car.Link, truncateText(car.CarData.Description, 200),
 		)
 		carResult = append(carResult, carInfo)
 	}
